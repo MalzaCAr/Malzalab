@@ -10,7 +10,7 @@
       title-url: https://login.tailscale.com/admin/machines
       url: https://api.tailscale.com/api/v2/tailnet/-/devices
       headers:
-        Authorization: Bearer tskey-api-kT5Ckm3N2511CNTRL-jKEsfzr9PJcPNSp1PXQ4JcZt1wZaePex
+        Authorization: [INSERT_TAILSCALE_API_KEY]
       cache: 10m
       template: |
         {{/* User Variables */}}
@@ -213,7 +213,7 @@
     - type: dns-stats
       service: pihole-v6
       url: http://192.168.100.209/
-      password: "KymI1VgwTTNfYERxQPOTMjM6Q0VSqtCC1mEgeACI3Bk="
+      password: [INSERT_PIHOLE_PASSWORD]
       hour-format: 24h
 
 
