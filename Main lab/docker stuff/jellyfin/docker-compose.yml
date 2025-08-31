@@ -1,0 +1,22 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - JELLYFIN_PublishedServerUrl=http://10.0.0.101 #optional
+    volumes:
+      - /home/malzacar/docker/jellyfin/config:/config
+      - /home/malzacar/docker/jellyfin/cache:/cache
+      - type: bind
+        source: /mnt/cloud_hdd/jellyfin/fonts
+        target: /usr/local/share/fonts/custom
+        read_only: true
+      - type: bind
+        source: /mnt/cloud_hdd/data
+        target: /data
+    ports:
+      - 8096:8096
+    restart: unless-stopped
+    gpus: all

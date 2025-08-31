@@ -1,0 +1,219 @@
+- name: Status
+  columns:
+  - size: small
+    widgets:
+    - type: clock
+      hour-format: 24h
+
+    - type: custom-api
+      title: Tailscale Devices
+      title-url: https://login.tailscale.com/admin/machines
+      url: https://api.tailscale.com/api/v2/tailnet/-/devices
+      headers:
+        Authorization: Bearer tskey-api-kT5Ckm3N2511CNTRL-jKEsfzr9PJcPNSp1PXQ4JcZt1wZaePex
+      cache: 10m
+      template: |
+        {{/* User Variables */}}
+        {{/* Set to true if you'd like an indicator for online devices */}}
+        {{ $enableOnlineIndicator := true }}
+
+        <style>
+        .device-info-container {
+            position: relative;
+            overflow: hidden;
+            height: 1.5em;
+        }
+
+        .device-info {
+            display: flex;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .device-ip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .device-info-container:hover .device-info {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        .device-info-container:hover .device-ip {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .update-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            display: inline-block;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .offline-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-negative);
+            display: inline-block;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-positive);
+            display: inline-block;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .device-name-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .indicators-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        </style>
+        <ul class="list list-gap-10 collapsible-container" data-collapse-after="4">
+        {{ range .JSON.Array "devices" }}
+        <li>
+            <div class="flex items-center gap-10">
+            <div class="device-name-container grow">
+                <span class="size-h4 block text-truncate color-primary">
+                {{ findMatch "^([^.]+)" (.String "name") }}
+                </span>
+                <div class="indicators-container">
+                {{ if (.Bool "updateAvailable") }}
+                <span class="update-indicator" data-popover-type="text" data-popover-text="Update Available"></span>
+                {{ end }}
+
+                {{ $lastSeen := .String "lastSeen" | parseTime "rfc3339" }}
+                {{ if not ($lastSeen.After (offsetNow "-10s")) }}
+                {{ $lastSeenTimezoned := $lastSeen.In now.Location }}
+                <span class="offline-indicator" data-popover-type="text"
+                    data-popover-text="Offline - Last seen {{ $lastSeenTimezoned.Format " Jan 2 3:04pm" }}"></span>
+                {{ else if $enableOnlineIndicator }}
+                    <span class="online-indicator" data-popover-type="text" data-popover-text="Online"></span>
+                {{ end }}
+                </div>
+            </div>
+            </div>
+            <div class="device-info-container">
+            <ul class="list-horizontal-text device-info">
+                <li>{{ .String "os" }}</li>
+                <li>{{ .String "user" }}</li>
+            </ul>
+            <div class="device-ip">
+                {{ .String "addresses.0"}}
+            </div>
+            </div>
+        </li>
+        {{ end }}
+        </ul>
+
+
+  - size: full
+    widgets:
+    - type: monitor
+      cache: 1m
+      title: Services
+      sites:
+        - title: Portainer
+          allow-insecure: true
+          url: https://192.168.100.207:9443
+          icon: sh:portainer
+        - title: Immich
+          url: http://192.168.100.207:2283
+          icon: sh:immich
+        - title: Vaultwarden
+          url: http://192.168.100.207:8080
+          icon: si:vaultwarden
+        - title: OmniTools
+          url: http://192.168.100.207:5050
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/omni-tools.png
+        - title: Jellyfin
+          url: http://192.168.100.207:8096
+          icon: sh:jellyfin
+        - title: Pi-hole
+          url: http://192.168.100.209/admin
+          icon: sh:pi-hole
+        - title: Nextcloud
+          url: http://192.168.100.207:8888
+          alt-status-codes:
+            - 400
+          icon: sh:nextcloud
+        - title: qBittorrent
+          url: http://192.168.100.207:8081
+          icon: sh:qbittorrent
+        - title: MeTube
+          allow-insecure: true
+          url: https://192.168.100.207:8082
+          icon: sh:metube
+
+
+    - type: monitor
+      cache: 1m
+      title: Arr stack
+      sites:
+        - title: Prowlarr
+          url: http://192.168.100.207:9696
+          icon: sh:prowlarr
+        - title: Sonarr
+          url: http://192.168.100.207:8989
+          icon: sh:sonarr
+        - title: Radarr
+          url: http://192.168.100.207:7878
+          icon: sh:radarr
+        - title: Bazarr
+          url: http://192.168.100.207:6767
+          icon: di:bazarr
+        - title: Lidarr
+          url: http://192.168.100.207:8686
+          icon: sh:lidarr
+        - title: Jellyseer
+          url: http://192.168.100.207:5055
+          icon: sh:jellyseerr
+        - title: Jackett
+          url: http://192.168.100.207:9117/UI/Login
+          icon: auto-invert sh:jackett
+          alt-status-codes:
+            - 400
+
+  - size: small
+    widgets:
+    - type: server-stats
+      servers:
+      - type: local
+        name: Services
+        hide-mountpoints-by-default: true
+        mountpoints:
+          "/":
+            name: SSD
+            hide: false
+          "/mnt/cloud_hdd":
+            name: HDD
+            hide: false
+
+    - type: dns-stats
+      service: pihole-v6
+      url: http://192.168.100.209/
+      password: "KymI1VgwTTNfYERxQPOTMjM6Q0VSqtCC1mEgeACI3Bk="
+      hour-format: 24h
+
+

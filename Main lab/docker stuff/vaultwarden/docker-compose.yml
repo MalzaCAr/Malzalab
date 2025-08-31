@@ -1,0 +1,27 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - /mnt/cloud_hdd/vaultwarden:/data
+    environment:
+      WEBSOCKET_ENABLED: "true"
+
+  backup:
+    image: jmqm/vaultwarden_backup:latest
+    container_name: vaultwarden_backup
+    network_mode: none
+    restart: always
+    volumes:
+      - /mnt/cloud_hdd/vaultwarden:/data:ro # Read-only
+      - /mnt/cloud_hdd/vaultwarden/backups:/backups
+
+      - /etc/localtime:/etc/localtime:ro # Container uses date from host.
+    environment:
+      - DELETE_AFTER=30
+      - CRON_TIME=0 0 * * * # Runs at 12:00 AM.
+      - UID=1000
+      - GID=1000
