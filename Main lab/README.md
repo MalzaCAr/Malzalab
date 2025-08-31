@@ -12,8 +12,8 @@ This "server" is really just an old gaming rig that I gave a new life to after i
 - [Docker](#docker)
   - [Portainer](#portainer)
   - [Watchtower](#watchtower)
-  - Immich
-  - Vaultwarden
+  - [Immich](#immich)
+  - [Vaultwarden](#vaultwarden)
   - Omnitools
   - Jellyfin
   - Nextcloud
@@ -21,7 +21,7 @@ This "server" is really just an old gaming rig that I gave a new life to after i
   - Arr* stack
 - Nginx reverse proxy
   
-## Docker
+# Docker
 Most of the stuff I actually use (with a few exceptions like Pi-hole) run via docker and docker compose. If you've never used docker, there are plenty of tutorials online, but to use my config, 
 all you have to do is install docker from [here](https://docs.docker.com/engine/install/), 
 and either copy a `docker run` command, or navigate to a folder with a `docker-compose.yml` file and type in `docker compose up -d`.
@@ -64,5 +64,13 @@ This is what I use:
 {{#if album}}{{album}}{{else}}Other{{/if}}/{{filetypefull}}/{{filename}}
 ```
 This will organize your photo library by album (or placing in "Other" if no album), and into seperate IMAGE or VIDEO folders.
-<br/>
+<br/><br/>
 For more info about all of this, check out the [docs](https://immich.app/docs/overview/welcome/)
+
+## Vaultwarden
+Vaultwarden is a password manager that's compatible with **Bitwarden**.
+The setup is pretty simple: run docker compose, go to the webui, set it up, then you can integrate it into a Bitwarden extension/app.
+I aditionally set up `Vaultwarden backup`, that does daily backups and places them into the /backup folder. I plan to use this with rsync to back up this folder off site, but that's a feature i'll implement soontm.
+<br/><br/>
+You can find additional information [here](https://github.com/dani-garcia/vaultwarden)
+
