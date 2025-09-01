@@ -14,8 +14,8 @@ This "server" is really just an old gaming rig that I gave a new life to after i
   - [Watchtower](#watchtower)
   - [Immich](#immich)
   - [Vaultwarden](#vaultwarden)
-  - Omnitools
-  - Jellyfin
+  - [Omnitools](#omnitools)
+  - [Jellyfin](#jellyfin)
   - Nextcloud
   - Metube
   - Arr* stack
@@ -71,6 +71,14 @@ For more info about all of this, check out the [docs](https://immich.app/docs/ov
 Vaultwarden is a password manager that's compatible with **Bitwarden**.
 The setup is pretty simple: run docker compose, go to the webui, set it up, then you can integrate it into a Bitwarden extension/app.
 I aditionally set up `Vaultwarden backup`, that does daily backups and places them into the /backup folder. I plan to use this with rsync to back up this folder off site, but that's a feature i'll implement soontm.
+
 <br/><br/>
 You can find additional information [here](https://github.com/dani-garcia/vaultwarden)
 
+## Omnitools
+This is a very simple site that has a bunch of tools for, pdfs, images, videos, gifs and so on. Not very useful, until you need it, then it's the best thing to ever be concieved.
+
+## Jellyfin
+Jellyfin is a media streaming service for movies, tv shows and/or music. 
+Important to note that this docker-compose file is set up for **Nvidia** gpus, used for hardware transcoding.
+You can find more information in the docs [here](https://jellyfin.org/docs/)
