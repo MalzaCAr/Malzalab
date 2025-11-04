@@ -16,8 +16,6 @@ This "server" is really just an old gaming rig that I gave a new life to after i
   - [Vaultwarden](#vaultwarden)
   - [Omnitools](#omnitools)
   - [Jellyfin](#jellyfin)
-  - Nextcloud
-  - Metube
   - Arr* stack
 - Nginx reverse proxy
   
@@ -82,3 +80,18 @@ This is a very simple site that has a bunch of tools for, pdfs, images, videos, 
 Jellyfin is a media streaming service for movies, tv shows and/or music. 
 Important to note that this docker-compose file is set up for **Nvidia** gpus, used for hardware transcoding.
 You can find more information in the docs [here](https://jellyfin.org/docs/)
+
+# How I connect to my homelab
+Here's a quick overview of the system I use to actually talk to my homelab. I use:
+- Tailscale
+- Pihole (more on that can be read on the RaspPi section)
+- Nginx (*not* Nginx Proxy Manager)
+I use a set of 2 domains for each of my services, one ending in `.lan`, the other ending in `.tail`. `.lan` is connected, obviously, via a lan IP (192.168.\*.\*), and `.tail` is connected via an IP gave to me by tailscale (100.\*.\*.\*).
+For these custom domains, I use a self signed SSL certificate, which I generated via this command:
+```
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \                                                                                                                                     ✔ 
+  -keyout malzalab.key -out malzalab.crt \
+  -subj "/CN=malzalab.lan" \
+  -addext "subjectAltName=DNS:*.malzalab.lan,DNS:*.malzalab.tail"
+```
+
