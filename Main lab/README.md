@@ -120,4 +120,26 @@ I use raw Nginx config files, and I used [these docs](https://nginx.org/en/docs/
 <br/>
 
 # Backup
-TBD
+There are lots and lots of ways to do backups. I chose the more barebones way using **rsync** and a simple shell script:
+```
+#!/bin/bash
+
+mkdir -p /path/to/backups/log
+LOG_FILE="/path/to/backups/log/nightly_backup_$(date +%F).log"
+
+{
+  echo "==========IMMICH BACKUP=========="
+  rsync -avh --delete \
+    --exclude='encoded-video' \
+    --exclude='thumbs' \
+    /path/to/immich-data/ /path/to/backups/immich-data/
+
+  echo "==========VAULTWARDEN BACKUP=========="
+  rsync -avh --delete /path/to/vaultwarden /path/to/backups/vaultwarden
+} > "$LOG_FILE" 2>&1
+
+```
+
+Since currently I'm limited on storage space, I back up my most important stuff in images and passwords.
+This is a very temporary and bad solution, since here I'm just copying stuff from my prone-to-failure hard drives to my boot SSD. I will add a proper 3-2-1 solution soon(tm)
+
