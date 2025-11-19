@@ -27,10 +27,9 @@ For more information, use the interwebs or [check the docs](https://docs.docker.
 
 ## Portainer
 Portainer is a docker management tool where you can manage images, stacks, containers and other stuff. To install it, I followed the [portainer docs](https://docs.portainer.io/start/install-ce/server/docker/linux), but if you're lazy, 
-basically run 
-
+basically run `docker volume create portainer_data` to create a volume needed by docker, then run 
 ```
-docker volume create portainer_data` to create a volume needed by docker, then run `docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:lts
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:lts
 ```
 
 After that, access the webui at `https://localhost:9443.`
@@ -142,4 +141,5 @@ LOG_FILE="/path/to/backups/log/nightly_backup_$(date +%F).log"
 
 Since currently I'm limited on storage space, I back up my most important stuff in images and passwords.
 This is a very temporary and bad solution, since here I'm just copying stuff from my prone-to-failure hard drives to my boot SSD. I will add a proper 3-2-1 solution soon(tm)
+
 
